@@ -1,5 +1,7 @@
-import { PlayingState } from '../lib/speech';
+import { PlayingState } from "../lib/speech";
 
+const PLAY_STATE = "playing" as PlayingState;
+const PAUSE_STATE = "paused" as PlayingState;
 /*
  * Implement a component that provides basic UI options such as playing, pausing and loading new content
  * This component should have the following,
@@ -11,11 +13,20 @@ export const Controls = ({
   play,
   pause,
   loadNewContent,
+  state,
 }: {
   play: () => void;
   pause: () => void;
   loadNewContent: () => void;
   state: PlayingState;
 }) => {
-  return <div></div>;
+  const handleClick = state === PLAY_STATE ? pause : play;
+  const textButton = state === PLAY_STATE ? "Pause" : "Play";
+
+  return (
+    <div className="wrapper-button">
+      <button onClick={handleClick}>{textButton}</button>
+      <button onClick={loadNewContent}>Load New Content</button>
+    </div>
+  );
 };

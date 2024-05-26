@@ -16,5 +16,11 @@ export const CurrentlyReading = ({
   currentSentenceIdx: number;
   sentences: string[];
 }) => {
-  return <div data-testid="currently-reading"></div>;
+  const display = sentences?.join(", ") || "";
+  return (
+    <div data-testid="currently-reading">
+      <h3 className="wrapper-text">{sentences[currentSentenceIdx]}</h3>
+      <p>{display}</p>
+    </div>
+  );
 };

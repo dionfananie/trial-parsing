@@ -1,12 +1,26 @@
-.currently-reading { 
-
+.currently-reading {
 }
 
-.currently-reading .currently-reading-text { 
-    font-size: 24px;
+.currently-reading .currently-reading-text {
+  font-size: 24px;
 }
 
-.currently-reading .currently-reading-text .currentword { 
-    font-size: 24px;
-    color: red;
+.currently-reading .currently-reading-text .currentword {
+  font-size: 24px;
+  color: red;
+}
+
+.wrapper-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.wrapper-text {
+  margin-top: 12px;
+}
+
+.App {
+  margin: 18px;
 }
