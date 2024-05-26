@@ -34,10 +34,14 @@ const useSpeech = (sentences: Array<string>) => {
   } = createSpeechEngine({ onBoundary, onEnd, onStateUpdate });
 
   const play = () => {
-    console.log("play", sentences[currentSentenceIdx]);
-    loadSpeech(sentences[currentSentenceIdx]);
-    playSpeech();
-    setCurrentSentenceIdx((v) => v + 1);
+    try {
+      console.log("play", sentences[currentSentenceIdx]);
+      loadSpeech(sentences[currentSentenceIdx]);
+      playSpeech();
+      setCurrentSentenceIdx((v) => v + 1);
+    } catch (error) {
+      console.error(error);
+    }
   };
   const pause = () => {
     console.log("pause");

@@ -32,6 +32,8 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
     },
   };
 
+  console.log(state);
+
   window.speechSynthesis.onvoiceschanged = (e) => {
     state.config.voice = speechSynthesis.getVoices()[0];
   };
