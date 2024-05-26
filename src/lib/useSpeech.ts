@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { PlayingState } from './speech';
+import { PlayingState, createSpeechEngine } from "./speech";
 
 /*
   @description
@@ -11,20 +11,52 @@ import { PlayingState } from './speech';
   the currently read word and sentence
 */
 const useSpeech = (sentences: Array<string>) => {
-  const [currentSentenceIdx, setCurrentSentenceIdx] = useState(0);
-  const [currentWordRange, setCurrentWordRange] = useState([0, 0]);
+  const [currentSentenceIdx, setCurrentSentenceIdx] = useState(-1);
+  const [currentWordRange, setCurrentWordRange] = useState<[number, number]>([
+    0, 0,
+  ]);
 
   const [playbackState, setPlaybackState] = useState<PlayingState>("paused");
+  const sentencesSpeech = sentences.join("\n");
 
-  const play = () => {};
-  const pause = () => {};
+  const onBoundary = (e: SpeechSynthesisEvent) => {
+    if (e.name === "sentence") {
+      setCurrentSentenceIdx((v) => v + 1);
+    } else {
+      setCurrentWordRange([e.charIndex, e.charIndex + e.charLength]);
+    }
+  };
+  const onEnd = (e: SpeechSynthesisEvent) => {};
+  const onStateUpdate = (state: PlayingState) => {
+    setPlaybackState(state);
+  };
+
+  const {
+    play: playSpeech,
+    pause: pauseSpeech,
+    load,
+  } = createSpeechEngine({
+    onBoundary,
+    onEnd,
+    onStateUpdate,
+  });
+
+  const play = () => {
+    load(sentencesSpeech);
+    playSpeech();
+  };
+
+  const pause = () => {
+    pauseSpeech();
+  };
+
+  const controls = { play, pause, state: playbackState };
 
   return {
-    currentSentenceIdx,
-    currentWordRange,
+    currentSentence: currentSentenceIdx,
+    currentWord: currentWordRange,
     playbackState,
-    play,
-    pause,
+    controls,
   };
 };
 
