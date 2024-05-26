@@ -15,9 +15,18 @@ const fetchContent = async (url = API_URL): Promise<string> => {
  * Avoid using DOMParser for implementing this function.
  */
 const parseContentIntoSentences = (content: string) => {
-  const parsed = content.match(/<s>(.*?)<\/s>/gi) || [];
-  const textParsed = parsed?.map((item) => {
-    return item.replace(/<\/?s>/gi, "");
+  // const parsed = content.match(/<s>(.*?)<\/s>/gi) || []; //alternative code
+  // const textParsed = parsed?.map((item) => {
+  //   return item.replace(/<\/?s>/gi, "");
+  // });
+
+  const container = document.createElement("div");
+  container.innerHTML = content;
+  const arr = container.querySelectorAll("s");
+  let textParsed: string[] = [];
+  arr.forEach((item) => {
+    console.log(item.innerText);
+    textParsed.push(item.innerText);
   });
 
   return textParsed;
