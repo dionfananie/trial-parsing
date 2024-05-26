@@ -32,15 +32,11 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
     },
   };
 
-  console.log(state);
-
   window.speechSynthesis.onvoiceschanged = (e) => {
     state.config.voice = speechSynthesis.getVoices()[0];
   };
 
   const load = (text: string) => {
-    console.log("text insdie", text);
-
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = state.config.rate;
     utterance.volume = state.config.volume;
@@ -58,11 +54,8 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
 
   const play = () => {
     if (!state.utterance) throw new Error("No active utterance found to play");
-    console.log("masuk");
 
     state.utterance.onstart = () => {
-      console.log("masuk");
-
       console.log("waiting for onstart");
       options.onStateUpdate("playing");
     };

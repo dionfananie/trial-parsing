@@ -20,17 +20,12 @@ const fetchContent = async (url = API_URL): Promise<string> => {
  * Avoid using DOMParser for implementing this function.
  */
 const parseContentIntoSentences = (content: string) => {
-  const parsed = content.split(/<\/?s>/i);
-  // const matcher = content.substring(/<\/?s>+/);
-  // console.log(matcher);
+  let texts = content
+    .match(/<s>(.*?)<\/s>/gi)
+    ?.map((item) => item.replace(/<\/?s>/g, ""));
+  console.log(texts);
 
-  const textParsed = parsed.filter((item) => {
-    const replaced = item.replace(/<\/?speak?>/g, "");
-    if (Boolean(replaced)) return replaced;
-  });
-  console.log(textParsed);
-
-  return textParsed;
+  return texts || [];
 };
 
 export { fetchContent, parseContentIntoSentences };

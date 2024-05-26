@@ -16,10 +16,22 @@ export const CurrentlyReading = ({
   currentSentenceIdx: number;
   sentences: string[];
 }) => {
-  const display = sentences?.join(", ") || "";
+  const display = sentences?.join("\n") || "";
+  const currentWord = display.substring(
+    currentWordRange[0],
+    currentWordRange[1]
+  );
+  const currentSentence = sentences[currentSentenceIdx] || "";
+  const finalDisplay = currentSentence.replace(
+    currentWord,
+    `<span class="red">${currentWord}</span>`
+  );
   return (
     <div data-testid="currently-reading">
-      <h3 className="wrapper-text">{sentences[currentSentenceIdx]}</h3>
+      <h3
+        className="wrapper-text"
+        dangerouslySetInnerHTML={{ __html: finalDisplay }}
+      />
       <p>{display}</p>
     </div>
   );
