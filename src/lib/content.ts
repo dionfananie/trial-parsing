@@ -20,12 +20,28 @@ const fetchContent = async (url = API_URL): Promise<string> => {
  * Avoid using DOMParser for implementing this function.
  */
 const parseContentIntoSentences = (content: string) => {
-  let texts = content
-    .match(/<s>(.*?)<\/s>/gi)
-    ?.map((item) => item.replace(/<\/?s>/g, ""));
-  console.log(texts);
+  const div = document.createElement('div')
+  div.innerHTML = content
+  const result: string[] = []
 
-  return texts || [];
+  if (div.children.length === 0 || div.children[0]?.tagName.toUpperCase() !== 'SPEAK') {
+    throw('error')
+  }
+
+  function collectText(elements: HTMLElement[]) {
+    Array.from(elements).forEach(element => {
+      if (element.textContent?.trim() && element.tagName.toUpperCase() === 'S') {
+        result.push(element.textContent)
+      }
+      
+      collectText(Array.from(element.children) as HTMLElement[]);
+    })
+
+
+  }
+
+  collectText(Array.from(div.children) as HTMLElement[])
+  return result
 };
 
 export { fetchContent, parseContentIntoSentences };

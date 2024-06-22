@@ -12,27 +12,30 @@ export const CurrentlyReading = ({
   currentSentenceIdx,
   sentences,
 }: {
+  
   currentWordRange: [number, number];
   currentSentenceIdx: number;
   sentences: string[];
-}) => {
-  const display = sentences?.join("\n") || "";
-  const currentWord = display.substring(
+  }) => {
+    
+    const currentSentence = sentences[currentSentenceIdx] || "";
+    const display = sentences?.join("\n") || "";
+    const currentWord = currentSentence.substring(
     currentWordRange[0],
     currentWordRange[1]
-  );
-  const currentSentence = sentences[currentSentenceIdx] || "";
+    );
   const finalDisplay = currentSentence.replace(
     currentWord,
-    `<span class="red">${currentWord}</span>`
+    `<span class="red" data-testid="current-word">${currentWord}</span>`
   );
   return (
     <div data-testid="currently-reading">
-      <h3
+      <p
+        data-testid="current-sentence"
         className="wrapper-text"
         dangerouslySetInnerHTML={{ __html: finalDisplay }}
       />
-      <p>{display}</p>
+      {display}
     </div>
   );
 };

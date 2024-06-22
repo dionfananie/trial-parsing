@@ -28,7 +28,7 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
     config: {
       rate: 1,
       volume: 1,
-      voice: window.speechSynthesis.getVoices()[0],
+      voice: window.speechSynthesis?.getVoices()?.[0],
     },
   };
 
@@ -37,6 +37,7 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
   };
 
   const load = (text: string) => {
+    console.log({text})
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = state.config.rate;
     utterance.volume = state.config.volume;
@@ -54,9 +55,8 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
 
   const play = () => {
     if (!state.utterance) throw new Error("No active utterance found to play");
-
     state.utterance.onstart = () => {
-      console.log("waiting for onstart");
+      console.log('waiting for onstart')
       options.onStateUpdate("playing");
     };
     window.speechSynthesis.cancel();

@@ -19,14 +19,15 @@ export const Controls = ({
   pause: () => void;
   loadNewContent: () => void;
   state: PlayingState;
-}) => {
-  const handleClick = state === PLAY_STATE ? pause : play;
-  const textButton = state === PLAY_STATE ? "Pause" : "Play";
+  }) => {
+  
+  const handleClick = ()  =>  state === PLAY_STATE ? pause() : play();
+  const textButton =  state === PLAY_STATE ? "Pause" : "Play";
 
   return (
     <div className="wrapper-button">
       <button onClick={handleClick}>{textButton}</button>
-      <button onClick={loadNewContent}>Load New Content</button>
+      <button onClick={loadNewContent}>Load new content</button>
     </div>
   );
 };

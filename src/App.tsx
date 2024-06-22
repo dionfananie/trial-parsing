@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./App.css";
 
 import { Controls } from "./components/Controls";
@@ -8,7 +8,7 @@ import { fetchContent, parseContentIntoSentences } from "./lib/content";
 
 function App() {
   const [sentences, setSentences] = useState<Array<string>>([]);
-  const { currentWord, currentSentence, playbackState, controls } =
+  const {  currentWordRange, currentSentenceIdx, playbackState, controls } =
     useSpeech(sentences);
 
   const fetching = useCallback(async () => {
@@ -30,8 +30,8 @@ function App() {
       <h1>Text to speech</h1>
       <div>
         <CurrentlyReading
-          currentWordRange={currentWord}
-          currentSentenceIdx={currentSentence}
+          currentWordRange={currentWordRange}
+          currentSentenceIdx={currentSentenceIdx}
           sentences={sentences}
         />
       </div>

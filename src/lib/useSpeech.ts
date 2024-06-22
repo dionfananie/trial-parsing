@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { PlayingState, createSpeechEngine } from "./speech";
+import { PlayingState, createSpeechEngine } from './speech';
 
 /*
   @description
@@ -11,57 +11,67 @@ import { PlayingState, createSpeechEngine } from "./speech";
   the currently read word and sentence
 */
 const useSpeech = (sentences: Array<string>) => {
-  const [currentSentenceIdx, setCurrentSentenceIdx] = useState(-1);
-  const [currentWordRange, setCurrentWordRange] = useState<[number, number]>([
-    0, 0,
-  ]);
+  const [currentSentenceIdx, setCurrentSentenceIdx] = useState(0);
+  const [currentWordRange, setCurrentWordRange] = useState([0, 0]);
+  
+  let sentenceQueue = []
+  const {state,
+    cancel,
+    load, play: playSpeech } = createSpeechEngine({
+      onBoundary: (e) => { 
+        console.log({ charIndex: e.charIndex, charLength: e.charLength})
+        if (e.name === 'word') {
+          setCurrentWordRange([e.charIndex, e.charIndex + e.charLength]);
+        }
+      },
+      onEnd: (e) => {
+        if (sentenceQueue.length) {
+          console.log(currentWordRange, currentSentenceIdx, sentences, sentenceQueue)
+          const sentence = sentenceQueue.shift();
+          load(sentence);
+          playSpeech();
+          setCurrentSentenceIdx(sentences.length - sentenceQueue.length - 1);
+        }
+      },
+      onStateUpdate: (e) => {
+        console.log('update', e)
+        console.log(e)
+      },
+    })
+  
 
   const [playbackState, setPlaybackState] = useState<PlayingState>("paused");
-  console.log(currentSentenceIdx);
-  const sentencesSpeech = sentences.join("\n");
 
-  const onBoundary = (e: SpeechSynthesisEvent) => {
-    if (e.name === "sentence") {
-      setCurrentSentenceIdx((v) => v + 1);
-    } else setCurrentWordRange([e.charIndex, e.charIndex + e.charLength]);
-  };
+  useEffect(() => {
+    sentenceQueue = sentences.slice();
+  }, [sentences])
 
-  const onEnd = (e: SpeechSynthesisEvent) => {
-    setCurrentSentenceIdx(-1);
-    setCurrentWordRange([0, 0]);
-  };
-
-  const onStateUpdate = (state: PlayingState) => {
-    setPlaybackState(state);
-  };
-
-  const {
-    state,
-    play: playSpeech,
-    pause: pauseSpeech,
-    load: loadSpeech,
-    cancel,
-  } = createSpeechEngine({ onBoundary, onEnd, onStateUpdate });
+  
 
   const play = () => {
-    try {
-      loadSpeech(sentencesSpeech);
-      playSpeech();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const sentence = sentenceQueue.shift();
+    load(sentence);
+    playSpeech();
+  }
+  
   const pause = () => {
-    console.log("pause");
-    pauseSpeech();
+    setPlaybackState('ended')
   };
-  const controls = { play, pause };
-
+  
+  
+  
   return {
-    currentSentence: currentSentenceIdx,
-    currentWord: currentWordRange,
+    currentSentenceIdx,
+    currentWordRange,
     playbackState,
-    controls,
+    setPlaybackState,
+    play,
+    pause,
+    controls: {
+      play: () => play(),
+      pause: () => pause(),
+      state: playbackState
+    }
   };
 };
 

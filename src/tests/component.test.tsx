@@ -27,7 +27,7 @@ const wordRange: [number, number] = [0, 4];
 
 describe("Currently Reading Component", () => {
   afterEach(cleanup);
-  it("Should render all the sentences", () => {
+  it.only("Should render all the sentences", () => {
     render(
       <CurrentlyReading
         currentWordRange={wordRange}
@@ -46,7 +46,9 @@ describe("Currently Reading Component", () => {
     });
   });
 
-  it("Should render the current sentence", () => {
+  it.only("Should render the current sentence", () => {
+    console.log('--')
+    console.log({wordRange, sentences})
     const { rerender } = render(
       <CurrentlyReading
         currentWordRange={wordRange}
@@ -74,7 +76,7 @@ describe("Currently Reading Component", () => {
     );
   });
 
-  it("Should render the current word", () => {
+  it.only("Should render the current word", () => {
     const { rerender } = render(
       <CurrentlyReading
         currentWordRange={wordRange}
